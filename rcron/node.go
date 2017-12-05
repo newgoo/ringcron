@@ -24,6 +24,10 @@ func (n *Node) insert(key string, times int, intervalTime time.Duration, f func(
 func (n *Node) execTask() {
 	for i, task := range n.taskList {
 		if task.times > 0 && task.state == true {
+			if task.intervalTime/n.ringTime > 0 {
+				task.intervalTime -= n.ringTime
+				continue
+			}
 			task.task()
 			n.lock.Lock()
 			task.times--

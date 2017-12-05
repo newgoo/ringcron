@@ -33,8 +33,8 @@ func New(len int, duration time.Duration) (rCron *RCron) {
 
 func (r *RCron) Exec() {
 	for range time.Tick(r.duration) {
-		r.ring = r.ring.Next()
 		log.Info(r.ring.Value, r.currentId)
+		r.ring = r.ring.Next()
 		r.currentId = (r.currentId + 1) % r.ring.Len()
 		if nd, ok := r.ring.Value.(*Node); ok {
 			if nd.hasTask {
@@ -52,7 +52,7 @@ func (r *RCron) InsertTask(key string, times int, intervalTime time.Duration, f 
 	if times != 1 {
 		return
 	}
-	node := r.nodes[r.currentId]
+	node := r.nodes[(r.currentId+1+int((intervalTime%(r.duration*time.Duration(r.ring.Len())))/r.duration))%r.ring.Len()]
 	node.insert(key, times, intervalTime, f)
 }
 
