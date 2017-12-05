@@ -45,10 +45,6 @@ func (r *RCron) Exec() {
 }
 
 func (r *RCron) InsertTask(key string, times int, intervalTime time.Duration, f func()) {
-	//node, ok := r.ring.Value.(*Node)
-	//if !ok {
-	//	r.ring.Value = new(Node)
-	//}
 	if times != 1 {
 		return
 	}
@@ -60,14 +56,14 @@ func (r *RCron) RemoveTask() {
 
 }
 
-func (r *RCron) CloseTask() {
-
-}
-
-func (r *RCron) Move(step int) {
-
-}
-
-func (r *RCron) Link() {
-
-}
+//func (r *RCron) CloseTask() {
+//
+//}
+//
+//func (r *RCron) Move(step int) {
+//
+//}
+//
+//func (r *RCron) Link() {
+//
+//}

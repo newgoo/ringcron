@@ -1,8 +1,10 @@
 package rcron
 
-import "time"
+import (
+	"time"
+)
 
-type task struct {
+type taskSingle struct {
 	state        bool
 	key          string
 	times        int
