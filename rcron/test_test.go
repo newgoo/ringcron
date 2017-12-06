@@ -11,9 +11,7 @@ func TestNew(t *testing.T) {
 	r := New(4, time.Second)
 	go r.Exec()
 	time.Sleep(time.Second * 2)
-	r.InsertTask("name", 1, 0, func() {
-		log.Infof("--------1-----------------")
-	})
+	r.InsertTask("name", 1, 0, func() {})
 	time.Sleep(time.Second * 2)
 	r.InsertTask("name2", 1, 2, func() {
 		log.Infof("---------2----------------")
