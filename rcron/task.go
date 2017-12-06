@@ -5,7 +5,7 @@ import (
 )
 
 type taskSingle struct {
-	state        bool
+	//state        bool
 	key          string
 	times        int
 	intervalTime time.Duration

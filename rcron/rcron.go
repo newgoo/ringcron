@@ -4,6 +4,8 @@ import (
 	"container/ring"
 	"time"
 
+	"sync"
+
 	"github.com/lunny/log"
 )
 
@@ -23,6 +25,7 @@ func New(len int, duration time.Duration) (rCron *RCron) {
 
 	for i := 0; i < rCron.ring.Len(); i++ {
 		node := new(Node)
+		node.taskMap = new(sync.Map)
 		node.ringTime = duration * time.Duration(len)
 		rCron.ring.Value = node
 		rCron.nodes[i] = node
@@ -36,10 +39,10 @@ func (r *RCron) Exec() {
 		log.Info(r.ring.Value, r.currentId)
 		r.ring = r.ring.Next()
 		r.currentId = (r.currentId + 1) % r.ring.Len()
-		if nd, ok := r.ring.Value.(*Node); ok {
-			if nd.hasTask {
-				go r.ring.Value.(*Node).execTask()
-			}
+		if _, ok := r.ring.Value.(*Node); ok {
+			//if nd.hasTask {
+			go r.ring.Value.(*Node).execTask()
+			//}
 		}
 	}
 }
