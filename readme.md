@@ -15,10 +15,10 @@ r := New(4, time.Second)
 ```
 * 写入一个任务 `InsertTask`
 ```
-r.InsertTask("name", 1, 0, func() {})
+r.InsertTask(key, 1, intervalTime, func() {})
 ```
 * 删除一个任务 `RemoveTask`
 ```
-r.RemoveTask("name2")
+r.RemoveTask(key)
 ```
 
