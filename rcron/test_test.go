@@ -10,23 +10,26 @@ import (
 )
 
 func TestNew(t *testing.T) {
-	r := New(4, time.Second)
+	r := New(4, time.Second*2)
 	go r.Exec()
 	time.Sleep(time.Second * 2)
-	r.InsertTask("name", 1, 0, func() {})
-	time.Sleep(time.Second * 2)
-	r.InsertTask("name2", 1, 2, func() {
-		log.Infof("---------2----------------")
-	})
-	log.Info(r.RemoveTask("name1"))
-
-	r.InsertTask("name2", 1, 0, func() {
-		log.Infof("---------3----------------")
-	})
-	log.Info(r.RemoveTask("name2"))
-	r.InsertTask("name4", 1, 0, func() {
-		log.Infof("---------4----------------")
-	})
+	r.InsertTask("name", 1, 0, func(name string) string {
+		log.Infof("---------1----------------", name)
+		return "admin"
+	}, "name")
+	//time.Sleep(time.Second * 2)
+	//r.InsertTask("name2", 1, 2, func() int {
+	//	log.Infof("---------2----------------")
+	//	return 3
+	//})
+	//
+	//r.InsertTask("name2", 1, 0, func() {
+	//	log.Infof("---------3----------------")
+	//})
+	//log.Info(r.RemoveTask("name2"))
+	//r.InsertTask("name4", 1, 0, func() {
+	//	log.Infof("---------4----------------")
+	//})
 	time.Sleep(time.Minute)
 }
 

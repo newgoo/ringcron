@@ -15,7 +15,10 @@ r := New(len, Intervals)
 ```
 * 写入一个任务 `InsertTask`
 ```
-r.InsertTask(key, times, intervalTime, func() {})
+r.InsertTask("name", 1, 0, func(name string) string {
+		log.Infof("---------1----------------", name)
+		return "admin"
+	}, "name")
 ```
 times目前只能是1
 * 删除一个任务 `RemoveTask`

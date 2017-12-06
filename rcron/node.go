@@ -1,8 +1,12 @@
 package rcron
 
 import (
+	"fmt"
+	"reflect"
 	"sync"
 	"time"
+
+	"github.com/lunny/log"
 )
 
 type Node struct {
@@ -13,8 +17,17 @@ type Node struct {
 	taskMap *sync.Map
 }
 
-func (n *Node) insert(key string, times int, intervalTime time.Duration, f func()) {
-	n.taskMap.Store(key, &taskSingle{key: key, task: f, times: times, intervalTime: intervalTime})
+func (n *Node) insert(key string, times int, intervalTime time.Duration, f interface{}, params ...interface{}) (err error) {
+	in := make([]reflect.Value, 0)
+	if len(params) != reflect.ValueOf(f).Type().NumIn() {
+		log.Info("err", len(params), reflect.ValueOf(f).Type().NumIn())
+		return fmt.Errorf("error params num ")
+	}
+	for _, one := range params {
+		in = append(in, reflect.ValueOf(one))
+	}
+	n.taskMap.Store(key, &taskSingle{key: key, task: f, times: times, intervalTime: intervalTime, params: in})
+	return
 }
 
 func (n *Node) execTask() {
@@ -34,15 +47,16 @@ func (n *Node) exec(key, value interface{}) bool {
 			return true
 		}
 		signal := make(chan interface{})
-		go n.runTask(signal, key, tsk.task)
+		go n.runTask(signal, key, tsk.task, tsk.params)
 		go n.deleteTask(signal)
 		//tsk.state = false
 	}
 	return true
 }
 
-func (n *Node) runTask(signal chan interface{}, key interface{}, f func()) {
-	f()
+func (n *Node) runTask(signal chan interface{}, key interface{}, f interface{}, in []reflect.Value) {
+	value := reflect.ValueOf(f).Call(in)
+	fmt.Println(value)
 	signal <- key
 }
 

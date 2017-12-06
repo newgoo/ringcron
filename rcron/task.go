@@ -1,6 +1,7 @@
 package rcron
 
 import (
+	"reflect"
 	"time"
 )
 
@@ -9,5 +10,6 @@ type taskSingle struct {
 	key          string
 	times        int
 	intervalTime time.Duration
-	task         func()
+	task         interface{}
+	params       []reflect.Value
 }
