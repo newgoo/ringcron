@@ -2,9 +2,9 @@ package rcron
 
 import (
 	"container/ring"
-	"time"
-
+	"fmt"
 	"sync"
+	"time"
 
 	"github.com/lunny/log"
 )
@@ -15,10 +15,12 @@ type RCron struct {
 	currentId int
 	nodes     map[int]*Node
 	duration  time.Duration
+	keys      *sync.Map
 }
 
 func New(len int, duration time.Duration) (rCron *RCron) {
 	rCron = new(RCron)
+	rCron.keys = new(sync.Map)
 	rCron.duration = duration
 	rCron.ring = ring.New(len)
 	rCron.nodes = make(map[int]*Node)
@@ -51,12 +53,25 @@ func (r *RCron) InsertTask(key string, times int, intervalTime time.Duration, f 
 	if times != 1 {
 		return
 	}
-	node := r.nodes[(r.currentId+1+int((intervalTime%(r.duration*time.Duration(r.ring.Len())))/r.duration))%r.ring.Len()]
+	crId := r.currentId
+	nodeId := (crId + 1 + int((intervalTime%(r.duration*time.Duration(r.ring.Len())))/r.duration)) % r.ring.Len()
+	r.keys.Store(key, nodeId)
+	node := r.nodes[nodeId]
 	node.insert(key, times, intervalTime, f)
 }
 
-func (r *RCron) RemoveTask() {
-
+func (r *RCron) RemoveTask(key string) (err error) {
+	value, ok := r.keys.Load(key)
+	if !ok {
+		return fmt.Errorf("Task not exist! ")
+	}
+	nodeId, ok := value.(int)
+	if !ok {
+		return fmt.Errorf("Error ")
+	}
+	r.nodes[nodeId].delTask(key)
+	r.keys.Delete(key)
+	return
 }
 
 //func (r *RCron) CloseTask() {

@@ -20,6 +20,7 @@ func main() {
 	r.InsertTask("name2", 1, 2, func() {
 		log.Infof("---------2----------------")
 	})
+	log.Info(r.RemoveTask("name1"))
 
 	r.InsertTask("name3", 1, 0, func() {
 		log.Infof("---------3----------------")

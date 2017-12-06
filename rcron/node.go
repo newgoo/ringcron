@@ -8,7 +8,7 @@ import (
 type Node struct {
 	ringTime time.Duration
 	//lock      *sync.RWMutex
-	ringValue interface{}
+	//ringValue interface{}
 	//Count     int
 	taskMap *sync.Map
 }
@@ -16,10 +16,6 @@ type Node struct {
 func (n *Node) insert(key string, times int, intervalTime time.Duration, f func()) {
 	n.taskMap.Store(key, &taskSingle{key: key, task: f, times: times, intervalTime: intervalTime})
 }
-
-//func (n *Node) insert(key string, times int, intervalTime time.Duration, f func()) {
-//	n.taskMap.Store(key, &taskSingle{key: key, task: f, state: true, times: times, intervalTime: intervalTime})
-//}
 
 func (n *Node) execTask() {
 	n.taskMap.Range(n.exec)
@@ -52,6 +48,10 @@ func (n *Node) runTask(signal chan interface{}, key interface{}, f func()) {
 
 func (n *Node) deleteTask(signal chan interface{}) {
 	n.taskMap.Delete(<-signal)
+}
+
+func (n *Node) delTask(key interface{}) {
+	n.taskMap.Delete(key)
 }
 
 //list
