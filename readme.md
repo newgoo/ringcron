@@ -11,12 +11,13 @@ go get github.com/newgoo/ringcron
 #### 2. Getting Started
 * 创建一个新的定时环任务`New()`
 ```swagger codegen
-r := New(4, time.Second)
+r := New(len, Intervals)
 ```
 * 写入一个任务 `InsertTask`
 ```
-r.InsertTask(key, 1, intervalTime, func() {})
+r.InsertTask(key, times, intervalTime, func() {})
 ```
+times目前只能是1
 * 删除一个任务 `RemoveTask`
 ```
 r.RemoveTask(key)
