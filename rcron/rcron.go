@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"sync"
 	"time"
-
-	"github.com/lunny/log"
 )
 
 type RCron struct {
@@ -37,14 +35,13 @@ func New(len int, duration time.Duration) (rCron *RCron) {
 }
 
 func (r *RCron) Exec() {
+	fmt.Println("Misson begin ...")
 	for range time.Tick(r.duration) {
-		log.Info(r.ring.Value, r.currentId)
+		//log.Info(r.ring.Value, r.currentId)
 		r.ring = r.ring.Next()
 		r.currentId = (r.currentId + 1) % r.ring.Len()
 		if _, ok := r.ring.Value.(*Node); ok {
-			//if nd.hasTask {
 			go r.ring.Value.(*Node).execTask()
-			//}
 		}
 	}
 }

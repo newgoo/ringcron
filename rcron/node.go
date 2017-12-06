@@ -5,8 +5,6 @@ import (
 	"reflect"
 	"sync"
 	"time"
-
-	"github.com/lunny/log"
 )
 
 type Node struct {
@@ -20,7 +18,6 @@ type Node struct {
 func (n *Node) insert(key string, times int, intervalTime time.Duration, f interface{}, params ...interface{}) (err error) {
 	in := make([]reflect.Value, 0)
 	if len(params) != reflect.ValueOf(f).Type().NumIn() {
-		log.Info("err", len(params), reflect.ValueOf(f).Type().NumIn())
 		return fmt.Errorf("error params num ")
 	}
 	for _, one := range params {

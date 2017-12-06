@@ -33,6 +33,12 @@ func TestNew(t *testing.T) {
 	time.Sleep(time.Minute)
 }
 
+var f = func(name string) func() {
+	return func() {
+
+	}
+}
+
 func BenchmarkNew(b *testing.B) {
 	r := New(10, time.Second)
 	b.ResetTimer()

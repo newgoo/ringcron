@@ -7,11 +7,15 @@ import (
 )
 
 func main() {
-	s(f, "张三")
+	log.Info(make([]reflect.Value, 0))
+	var in []reflect.Value
+	log.Info(in)
+	//s(f, "张三")
 }
 
 var f = func(name string) {
 	log.Info("=========", name)
+
 }
 
 func s(f interface{}, name string) {
