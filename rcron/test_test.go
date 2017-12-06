@@ -4,6 +4,8 @@ import (
 	"testing"
 	"time"
 
+	"fmt"
+
 	"github.com/lunny/log"
 )
 
@@ -26,4 +28,15 @@ func TestNew(t *testing.T) {
 		log.Infof("---------4----------------")
 	})
 	time.Sleep(time.Minute)
+}
+
+func BenchmarkNew(b *testing.B) {
+	r := New(10, time.Second)
+	b.ResetTimer()
+	go r.Exec()
+	for i := 0; i < b.N; i++ {
+		r.InsertTask(fmt.Sprintf("%d", i), 1, 0, func() {
+			log.Info("==============", i)
+		})
+	}
 }
